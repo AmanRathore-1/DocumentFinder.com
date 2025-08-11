@@ -4,8 +4,8 @@
     // Load scheme names and populate select
     async function loadSchemeNames() {
       try {
-        const response = await fetch('https://documentfinder-com.onrender.com/schemes/');
-;
+        const response = await fetch('http://localhost:3000/schemes/');
+
         if (!response.ok) throw new Error('Failed to load scheme names');
         const schemeNames = await response.json();
 
@@ -39,7 +39,7 @@
       resultsContainer.innerHTML = '<p>Loading...</p>';
 
       try {
-        const response = await fetch(`https://documentfinder-com.onrender.com/schemes/${encodeURIComponent(selectedScheme)}`);
+        const response = await fetch(`http://localhost:3000/schemes/${encodeURIComponent(selectedScheme)}`);
 
 
         if (!response.ok) {
@@ -62,7 +62,7 @@
           schemeDiv.classList.add('scheme');
           schemeDiv.innerHTML = `
             <h2>${scheme.name}</h2>
-            <p><strong>Documents Required:</strong></p>
+            <p style="text-decoration:underline"><strong>Documents Required:</strong></p>
             <ul>
               ${scheme.documents.map(doc => `<li>${doc}</li>`).join('')}
             </ul>
