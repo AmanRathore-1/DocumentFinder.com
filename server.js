@@ -3,7 +3,12 @@ const connectDB=require("./db/MongoConnect");
 const ServerListening=require("./db/ServerListening");
 const schemeRoutes = require("./routes/schemeRoutes");
 require("dotenv").config(); 
+const cors = require("cors");
+
+
 const app = express();
+app.use(cors());
+
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));

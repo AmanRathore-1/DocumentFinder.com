@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scheme Search</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    #results { margin-top: 20px; }
+    .scheme { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Search Schemes</h1>
+
+  <form id="searchForm">
+    <select id="schemeSelect" required>
+      <option value="">Select a scheme</option>
+      <!-- Options will be dynamically loaded here -->
+    </select>
+    <button type="submit">Search</button>
+  </form>
+
+  <div id="results"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
