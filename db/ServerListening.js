@@ -2,15 +2,14 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT;
-const ServerListening = async (app) => {
-  try {
+const ServerListening = (app) => {
+  return new Promise((resolve) => {
+    const PORT = process.env.PORT || 3000; // ✅ Render assigns PORT
     app.listen(PORT, () => {
-      console.log(`🚀 Server running at http://localhost:${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
+      resolve();
     });
-  } catch (error) {
-    console.error("Port Can't be Served", error.message);
-    process.exit(1);
-  }
+  });
 };
 
 module.exports = ServerListening;
