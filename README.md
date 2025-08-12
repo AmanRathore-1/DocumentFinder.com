@@ -1,4 +1,3 @@
-Tagline:
 Find the exact documents you need for any scheme in seconds — no guesswork, no PDF hunting.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 📂 DocumentLister – Scheme Registration Document Finder
