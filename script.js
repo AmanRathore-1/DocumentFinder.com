@@ -57,6 +57,8 @@
 
         resultsContainer.innerHTML = ''; // Clear loading
 
+
+        //this arrya is showing the name and documents only
         schemes.forEach(scheme => {
           const schemeDiv = document.createElement('div');
           schemeDiv.classList.add('scheme');

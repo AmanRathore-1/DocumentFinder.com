@@ -87,6 +87,9 @@ exports.getAllSchemeNames = async (req, res) => {
 /**
  * Update a scheme by ID
  */
+
+//not much scalable
+// only using name and documents to update and not usign other fields if they are present 
 exports.updateScheme = async (req, res) => {
   try {
     const { id } = req.params;
@@ -145,3 +148,15 @@ exports.deleteScheme = async (req, res) => {
     res.status(500).json({ error: "Server error", details: err.message });
   }
 };
+
+//function in check
+exports.deleteAll=async (req,res) => {
+try{
+   await Scheme.deleteMany({});
+   res.status(200).json("All the Schemes deleted Succesfully");
+}
+catch(error)
+{
+  res.status(500).json({error:message.error});
+}
+}

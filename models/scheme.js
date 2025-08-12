@@ -10,6 +10,8 @@ const schemeSchema = new mongoose.Schema({
     type: Object,
     required: true
   }
+
+  //adding Information , last date to apply 
 });
 
 module.exports = mongoose.model("Scheme", schemeSchema);

@@ -13,7 +13,6 @@ router.post("/add", validateAddScheme, schemeController.addScheme);
 // In your routes file
 router.post("/bulk-add", schemeController.bulkAddSchemes);
 
-
 // GET /schemes — get all scheme names (no validation needed here)
 router.get("/", schemeController.getAllSchemeNames);
 
