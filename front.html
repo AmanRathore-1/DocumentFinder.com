@@ -7,7 +7,6 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    /* Reset and base */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -51,50 +50,45 @@
 
     form#searchForm {
       display: flex;
-      gap: 15px;
+      align-items: center;
       margin-bottom: 30px;
-      flex-wrap: wrap;
       justify-content: center;
     }
 
-    select#schemeSelect {
-      flex: 1 1 220px;
+    .search-container {
+      position: relative;
+      flex: 1;
+      display: flex;
+    }
+
+    input#searchscheme {
+      flex: 1;
       padding: 12px 16px;
-      border-radius: 8px;
+      border-radius: 8px 0 0 8px;
       border: none;
       font-size: 1rem;
       font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.25s ease, box-shadow 0.25s ease;
       background: #fff;
       color: #333;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      background-image: url('data:image/svg+xml;utf8,<svg fill="gray" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 16px 16px;
     }
-    select#schemeSelect:focus {
+    input#searchscheme:focus {
       outline: none;
       box-shadow: 0 0 0 3px #a084fc;
       background-color: #f0eaff;
     }
 
     button[type="submit"] {
-      padding: 12px 24px;
-      border-radius: 8px;
+      padding: 12px 20px;
+      border-radius: 0 8px 8px 0;
       border: none;
       background: #a084fc;
       color: #fff;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       box-shadow: 0 6px 12px rgba(160, 132, 252, 0.6);
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      flex: 0 0 auto;
     }
     button[type="submit"]:hover,
     button[type="submit"]:focus {
@@ -103,15 +97,49 @@
       outline: none;
     }
 
-    #results {
-      background: rgba(255,255,255,0.2);
-      border-radius: 10px;
-      padding: 20px;
-      min-height: 80px;
-      max-height: 400px;
-      overflow-y: auto;
-      box-shadow: inset 0 0 10px rgba(255,255,255,0.15);
+    #autocompleteList {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      color: #222;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      z-index: 10;
+      max-height: 200px;
+      overflow: hidden;
     }
+
+    /* ✅ Change added to hide scrollbar but keep scrolling */
+    #autocompleteList::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Edge */
+    }
+    #autocompleteList {
+      scrollbar-width: none; /* Firefox */
+    }
+
+    #autocompleteList div {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    #autocompleteList div:hover {
+      background: #f0eaff;
+    }
+
+   #results {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 20px;
+  min-height: 80px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.15);
+  
+  /* ✅ Hide scrollbar but keep scroll functionality */
+  scrollbar-width: none; /* Firefox */
+}
 
     .scheme {
       background: rgba(255,255,255,0.3);
@@ -127,31 +155,32 @@
       background: rgba(255,255,255,0.45);
     }
 
-    /* Scrollbar for #results */
-    #results::-webkit-scrollbar {
-      width: 8px;
-    }
+   #results::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
     #results::-webkit-scrollbar-thumb {
       background: #a084fc;
       border-radius: 20px;
+      overflow-y: hidden;
     }
     #results::-webkit-scrollbar-track {
       background: transparent;
     }
 
-    /* Responsive */
     @media (max-width: 480px) {
-      main {
-        padding: 20px 25px 30px;
-      }
       form#searchForm {
         flex-direction: column;
       }
-      button[type="submit"] {
+      .search-container {
         width: 100%;
       }
-      select#schemeSelect {
+      button[type="submit"] {
         width: 100%;
+        border-radius: 8px;
+        margin-top: 10px;
+      }
+      input#searchscheme {
+        border-radius: 8px;
       }
     }
   </style>
@@ -161,17 +190,23 @@
     <h1>Search Schemes</h1>
 
     <form id="searchForm">
-      <select id="schemeSelect" required>
-        <option value="">Select a scheme</option>
-        <!-- Options will be dynamically loaded here -->
-      </select>
-      <button type="submit">Search</button>
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchscheme"
+          name="searchscheme"
+          placeholder="Search your scheme here"
+          required
+          autocomplete="off">
+        <button type="submit">Search</button>
+        <div id="autocompleteList"></div>
+      </div>
     </form>
 
     <div id="results"></div>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
   <script src="script.js"></script>
-
-</body>
+</body>  
 </html>
