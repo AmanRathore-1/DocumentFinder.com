@@ -1,8 +1,7 @@
 Find the exact documents you need for any scheme in seconds — no guesswork, no PDF hunting.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 📂 DocumentLister – 
-DocumentLister is a web-based tool that helps users instantly find the required documents for registering under a specific government or organizational scheme.
-Instead of scrolling through lengthy lists or PDFs, users can simply search by scheme name and get the exact set of documents they need.
+DocumentLister is a web app that lets users quickly find the exact documents needed for any government or organization scheme by simply searching its name.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Features
 🔍 Smart Scheme Search – Search by scheme name and instantly see required documents.
