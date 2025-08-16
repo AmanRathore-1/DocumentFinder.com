@@ -3,6 +3,7 @@ const Scheme = require("../models/scheme");
 /**
  * Add new scheme
  */
+//add expirey date to the prompt
 exports.addScheme = async (req, res) => {
   try {
     const { name, documents } = req.body;
@@ -31,20 +32,38 @@ exports.bulkAddSchemes = async (req, res) => {
       return res.status(400).json({ error: "An array of schemes is required" });
     }
 
-    // Optional: Validate each scheme object has name and documents
+    // Validate each scheme
     for (const scheme of schemes) {
       if (!scheme.name || !scheme.documents) {
         return res.status(400).json({ error: "Each scheme must have name and documents" });
       }
     }
 
-    // Insert all schemes at once
-    const inserted = await Scheme.insertMany(schemes);
-    res.status(201).json({ message: "Schemes added successfully", insertedCount: inserted.length });
+    // Get all existing scheme names
+    const existingSchemes = await Scheme.find({}, "name").lean();
+    const existingNames = new Set(existingSchemes.map(s => s.name));
+
+    // Remove duplicates from request body
+    const newSchemes = schemes.filter(s => !existingNames.has(s.name));
+
+    if (newSchemes.length === 0) {
+      return res.status(400).json({ error: "No new schemes to insert" });
+    }
+
+    // Insert only the new ones
+    const inserted = await Scheme.insertMany(newSchemes, { ordered: false });
+
+    res.status(201).json({
+      message: "Schemes added successfully",
+      insertedCount: inserted.length,
+      skippedCount: schemes.length - newSchemes.length
+    });
+
   } catch (err) {
     res.status(500).json({ error: "Server error", details: err.message });
   }
 };
+
 
 
 /**
@@ -114,6 +133,7 @@ exports.updateScheme = async (req, res) => {
 
     const updated = await Scheme.findByIdAndUpdate(
       id,
+      //add scheme info to the prompt
       { ...(name && { name: name.trim() }), ...(documents && { documents }) },
       { new: true, runValidators: true }
     );
@@ -150,13 +170,11 @@ exports.deleteScheme = async (req, res) => {
 };
 
 //function in check
-exports.deleteAll=async (req,res) => {
-try{
-   await Scheme.deleteMany({});
-   res.status(200).json("All the Schemes deleted Succesfully");
-}
-catch(error)
-{
-  res.status(500).json({error:message.error});
-}
-}
+exports.deleteAll = async (req, res) => {
+  try {
+    await Scheme.deleteMany({});
+    res.status(200).json({ message: "All schemes deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Server error", details: error.message });
+  }
+};

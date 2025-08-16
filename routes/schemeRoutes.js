@@ -25,6 +25,7 @@ router.put("/:id", validateUpdateScheme, schemeController.updateScheme);
 // DELETE /schemes/:id — delete scheme by ID (with optional validation)
 router.delete("/:id", validateDeleteScheme, schemeController.deleteScheme);
 
-
+//delete all the scheme
+router.delete("/all",schemeController.deleteAll);
 
 module.exports = router;
