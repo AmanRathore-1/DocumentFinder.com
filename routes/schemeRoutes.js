@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 
 const schemeController = require("../Controllers/schemeController");
-const validateAddScheme = require('../validators/validateAddScheme');
-const validateGetSchemeByName = require('../validators/validateGetSchemeByName');
-const validateUpdateScheme = require('../validators/validateUpdateScheme');  
-const validateDeleteScheme = require('../validators/validateDeleteScheme');  
+const validateAddScheme = require("../validators/validateAddScheme");
+const validateGetSchemeByName = require("../validators/validateGetSchemeByName");
+const validateUpdateScheme = require("../validators/validateUpdateScheme");
+const validateDeleteScheme = require("../validators/validateDeleteScheme");
 
 // POST /schemes/add — add new scheme (with validation)
 router.post("/add", validateAddScheme, schemeController.addScheme);
@@ -17,7 +17,11 @@ router.post("/bulk-add", schemeController.bulkAddSchemes);
 router.get("/", schemeController.getAllSchemeNames);
 
 // GET /schemes/:name — get schemes by partial name match (with validation)
-router.get("/:name", validateGetSchemeByName, schemeController.getSchemeDocumentThroughTitle);
+router.get(
+  "/:name",
+  validateGetSchemeByName,
+  schemeController.getSchemeDocumentThroughTitle
+);
 
 // PUT /schemes/:id — update scheme by ID (with validation)
 router.put("/:id", validateUpdateScheme, schemeController.updateScheme);
@@ -26,6 +30,6 @@ router.put("/:id", validateUpdateScheme, schemeController.updateScheme);
 router.delete("/:id", validateDeleteScheme, schemeController.deleteScheme);
 
 //delete all the scheme
-router.delete("/all",schemeController.deleteAll);
+router.delete("/all", schemeController.deleteAll);
 
 module.exports = router;

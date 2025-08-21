@@ -1,17 +1,20 @@
 const mongoose = require("mongoose");
 
-const schemeSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    unique: true
+const schemeSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    documents: {
+      type: Object,
+      required: true,
+    },
   },
-  documents: {
-    type: Object,
-    required: true
+  {
+    timestamps: true,
   }
-
-  //adding Information , last date to apply 
-});
-
+);
+schemeSchema.index({ name: "text", documents: "text" });
 module.exports = mongoose.model("Scheme", schemeSchema);

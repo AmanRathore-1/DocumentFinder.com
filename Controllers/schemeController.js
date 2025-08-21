@@ -1,5 +1,5 @@
 const Scheme = require("../models/scheme");
-
+const cache = require("../utils/cache");
 /**
  * Add new scheme
  */
@@ -35,16 +35,18 @@ exports.bulkAddSchemes = async (req, res) => {
     // Validate each scheme
     for (const scheme of schemes) {
       if (!scheme.name || !scheme.documents) {
-        return res.status(400).json({ error: "Each scheme must have name and documents" });
+        return res
+          .status(400)
+          .json({ error: "Each scheme must have name and documents" });
       }
     }
 
     // Get all existing scheme names
     const existingSchemes = await Scheme.find({}, "name").lean();
-    const existingNames = new Set(existingSchemes.map(s => s.name));
+    const existingNames = new Set(existingSchemes.map((s) => s.name));
 
     // Remove duplicates from request body
-    const newSchemes = schemes.filter(s => !existingNames.has(s.name));
+    const newSchemes = schemes.filter((s) => !existingNames.has(s.name));
 
     if (newSchemes.length === 0) {
       return res.status(400).json({ error: "No new schemes to insert" });
@@ -56,15 +58,12 @@ exports.bulkAddSchemes = async (req, res) => {
     res.status(201).json({
       message: "Schemes added successfully",
       insertedCount: inserted.length,
-      skippedCount: schemes.length - newSchemes.length
+      skippedCount: schemes.length - newSchemes.length,
     });
-
   } catch (err) {
     res.status(500).json({ error: "Server error", details: err.message });
   }
 };
-
-
 
 /**
  * Get scheme(s) by partial name
@@ -77,7 +76,7 @@ exports.getSchemeDocumentThroughTitle = async (req, res) => {
 
   try {
     const schemes = await Scheme.find({
-      name: { $regex: name.trim(), $options: "i" }
+      name: { $regex: name.trim(), $options: "i" },
     });
 
     if (!schemes.length) {
@@ -86,29 +85,59 @@ exports.getSchemeDocumentThroughTitle = async (req, res) => {
 
     return res.status(200).json(schemes);
   } catch (err) {
+    return res
+      .status(500)
+      .json({ error: "Server error", details: err.message });
+  }
+};
+
+
+// ✅ Get all scheme names with timestamps + caching
+exports.getAllSchemeNames = async (req, res) => {
+  try {
+    // 1. Check cache
+    const cached = cache.get("schemeNames");
+    if (cached) {
+      return res.status(200).json({
+        source: "cache",
+        count: cached.length,
+        schemes: cached,
+      });
+    }
+
+    // 2. Fetch from DB
+    const schemes = await Scheme.find({}, "name createdAt updatedAt")
+      .sort({ name: 1 })
+      .lean();
+
+    if (!schemes || schemes.length === 0) {
+      return res.status(404).json({ error: "No schemes found" });
+    }
+
+    const formatted = schemes.map((scheme) => ({
+      name: scheme.name,
+      createdAt: scheme.createdAt,
+      updatedAt: scheme.updatedAt,
+    }));
+
+    // 3. Store in cache for 5 min
+    cache.set("schemeNames", formatted, 300);
+
+    // 4. Return response
+    return res.status(200).json({
+      source: "database",
+      count: formatted.length,
+      schemes: formatted,
+    });
+  } catch (err) {
     return res.status(500).json({ error: "Server error", details: err.message });
   }
 };
 
-/**
- * Get all scheme names (sorted alphabetically)
- */
-exports.getAllSchemeNames = async (req, res) => {
-  try {
-    const schemes = await Scheme.find({}, "name").sort({ name: 1 }).lean();
-    const names = schemes.map(scheme => scheme.name);
-    res.status(200).json(names);
-  } catch (err) {
-    res.status(500).json({ error: "Server error", details: err.message });
-  }
-};
 
-/**
- * Update a scheme by ID
- */
 
 //not much scalable
-// only using name and documents to update and not usign other fields if they are present 
+// only using name and documents to update and not usign other fields if they are present
 exports.updateScheme = async (req, res) => {
   try {
     const { id } = req.params;
@@ -120,14 +149,24 @@ exports.updateScheme = async (req, res) => {
 
     // Ensure at least one field is provided
     if (!name && !documents) {
-      return res.status(400).json({ error: "At least one field (name or documents) is required for update" });
+      return res
+        .status(400)
+        .json({
+          error:
+            "At least one field (name or documents) is required for update",
+        });
     }
 
     // Check for duplicate name if updating name
     if (name) {
-      const existing = await Scheme.findOne({ name: name.trim(), _id: { $ne: id } });
+      const existing = await Scheme.findOne({
+        name: name.trim(),
+        _id: { $ne: id },
+      });
       if (existing) {
-        return res.status(400).json({ error: "Another scheme with the same name already exists" });
+        return res
+          .status(400)
+          .json({ error: "Another scheme with the same name already exists" });
       }
     }
 
@@ -142,7 +181,9 @@ exports.updateScheme = async (req, res) => {
       return res.status(404).json({ error: "Scheme not found" });
     }
 
-    res.status(200).json({ message: "Scheme updated successfully", scheme: updated });
+    res
+      .status(200)
+      .json({ message: "Scheme updated successfully", scheme: updated });
   } catch (err) {
     res.status(500).json({ error: "Server error", details: err.message });
   }
