@@ -27,11 +27,8 @@ function createSuggestionsBox() {
   box.style.display = "none";
   box.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
   box.style.fontSize = "14px";
-  box.style.cssText += `::-webkit-scrollbar { display: none; }`;
-
   searchInput.parentNode.style.position = "relative";
   searchInput.parentNode.appendChild(box);
-
   return box;
 }
 
@@ -40,30 +37,17 @@ function createSuggestionsBox() {
 // =========================
 async function loadAllSchemes() {
   try {
-    const response = await fetch("http://localhost:3000/schemes/");
+    const response = await fetch("http://localhost:3000/schemes");
     if (!response.ok) throw new Error("Failed to load schemes");
-    allSchemes = await response.json();
+    const data = await response.json();
+    allSchemes = Array.isArray(data.schemes) ? data.schemes : [];
 
-    const isObjects =
-      allSchemes.length > 0 &&
-      typeof allSchemes[0] === "object" &&
-      allSchemes[0].name !== undefined;
-
-    fuse = new Fuse(
-      allSchemes,
-      isObjects
-        ? {
-            keys: ["name"],
-            threshold: 0.1,
-            ignoreLocation: true,
-            minMatchCharLength: 1,
-          }
-        : {
-            threshold: 0.1,
-            ignoreLocation: true,
-            minMatchCharLength: 1,
-          }
-    );
+    fuse = new Fuse(allSchemes, {
+      keys: ["name"],
+      threshold: 0.3,
+      ignoreLocation: true,
+      minMatchCharLength: 1,
+    });
   } catch (error) {
     console.error("Error loading schemes:", error);
   }
@@ -78,7 +62,10 @@ async function fetchSchemeDetailsByName(name) {
       const errorData = await response.json();
       return { error: errorData.error || "Unknown error" };
     }
-    return await response.json();
+    const data = await response.json();
+    // return first item if array
+    if (Array.isArray(data)) return data[0] || { error: "No scheme found" };
+    return data;
   } catch {
     return { error: "Network error or server unreachable" };
   }
@@ -92,52 +79,38 @@ function showSuggestions(results) {
     suggestionsBox.style.display = "none";
     return;
   }
-
   suggestionsBox.innerHTML = results
     .slice(0, 8)
-    .map((result) => {
-      const name =
-        (result.item && result.item.name) ||
-        result.item ||
-        result.name ||
-        result;
-      return `<div class="suggestion-item" style="padding:8px; cursor:pointer;">${name}</div>`;
-    })
+    .map(
+      (result) =>
+        `<div class="suggestion-item" style="padding:8px; cursor:pointer;">${result.item.name}</div>`
+    )
     .join("");
-
   suggestionsBox.style.display = "block";
 
   document.querySelectorAll(".suggestion-item").forEach((item) => {
-    item.addEventListener("click", () => {
+    item.addEventListener("click", async () => {
       searchInput.value = item.textContent;
       suggestionsBox.style.display = "none";
       searchInput.focus();
+      await handleFormSubmit(new Event("submit"));
     });
   });
 }
 
-function showSchemeDetails(schemeDetails) {
+function showSchemeDetails(scheme) {
   resultsContainer.innerHTML = "";
-  const schemesArray = Array.isArray(schemeDetails)
-    ? schemeDetails
-    : [schemeDetails];
-  schemesArray.forEach((scheme) => {
-    const docs = Array.isArray(scheme.documents) ? scheme.documents : [];
-    const schemeDiv = document.createElement("div");
-    schemeDiv.classList.add("scheme");
-    schemeDiv.innerHTML = `
-      <h2>${scheme.name || "Unnamed Scheme"}</h2>
-      <p style="text-decoration:underline"><strong>Documents Required:</strong></p>
-      <ul>
-        ${
-          docs.length
-            ? docs.map((doc) => `<li>${doc}</li>`).join("")
-            : "<li>No documents listed.</li>"
-        }
-      </ul>
-    `;
-    resultsContainer.appendChild(schemeDiv);
-  });
+  const docs = Array.isArray(scheme.documents) ? scheme.documents : [];
+  const schemeDiv = document.createElement("div");
+  schemeDiv.classList.add("scheme");
+  schemeDiv.innerHTML = `
+    <h2>${scheme.name || "Unnamed Scheme"}</h2>
+    <p style="text-decoration:underline"><strong>Documents Required:</strong></p>
+    <ul>
+      ${docs.length ? docs.map((doc) => `<li>${doc}</li>`).join("") : "<li>No documents listed.</li>"}
+    </ul>
+  `;
+  resultsContainer.appendChild(schemeDiv);
 }
 
 function showSearchResults(searchResults) {
@@ -145,29 +118,22 @@ function showSearchResults(searchResults) {
     <p>Is this the scheme you are searching for?</p>
     <ul id="matchedSchemes" style="list-style:none; padding-left: 0;">
       ${searchResults
-        .map((result) => {
-          const name =
-            (result.item && result.item.name) ||
-            result.item ||
-            result.name ||
-            result;
-          return `<li style="cursor:pointer; padding: 8px; border-bottom: 1px solid #ddd; color:#333; background:#fff; border-radius:4px; margin-bottom:6px;" class="matched-scheme-item">${name}</li>`;
-        })
+        .map(
+          (result) =>
+            `<li style="cursor:pointer; padding: 8px; border-bottom: 1px solid #ddd; color:#333; background:#fff; border-radius:4px; margin-bottom:6px;" class="matched-scheme-item">${result.item.name}</li>`
+        )
         .join("")}
     </ul>
     <p style="margin-top: 10px; font-style: italic;">Click a scheme name to see details.</p>
   `;
-
   document.querySelectorAll(".matched-scheme-item").forEach((item) => {
     item.addEventListener("click", async () => {
       resultsContainer.innerHTML = "<p>Loading scheme details...</p>";
       const schemeDetails = await fetchSchemeDetailsByName(item.textContent);
-
       if (schemeDetails.error) {
         resultsContainer.innerHTML = `<p>Error: ${schemeDetails.error}</p>`;
         return;
       }
-
       showSchemeDetails(schemeDetails);
     });
   });
@@ -190,51 +156,40 @@ function handleSearchInput() {
 }
 
 async function handleFormSubmit(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   suggestionsBox.style.display = "none";
-
   const searchTerm = searchInput.value.trim();
   if (!searchTerm) {
     resultsContainer.innerHTML = "<p>Please enter a scheme name to search.</p>";
     return;
   }
-
   if (!fuse) {
-    resultsContainer.innerHTML =
-      "<p>Loading data, please try again shortly...</p>";
+    resultsContainer.innerHTML = "<p>Loading data, please try again shortly...</p>";
     return;
   }
 
-  // 🔹 1. Check for exact match first
-  const exactMatch = allSchemes.find((s) => {
-    const name = s.name || s;
-    return name.toLowerCase() === searchTerm.toLowerCase();
-  });
-
+  // Exact match first
+  const exactMatch = allSchemes.find(
+    (s) => s.name.toLowerCase() === searchTerm.toLowerCase()
+  );
   if (exactMatch) {
     resultsContainer.innerHTML = "<p>Loading scheme details...</p>";
-    const schemeDetails = await fetchSchemeDetailsByName(
-      exactMatch.name || exactMatch
-    );
-
+    const schemeDetails = await fetchSchemeDetailsByName(exactMatch.name);
     if (schemeDetails.error) {
       resultsContainer.innerHTML = `<p>Error: ${schemeDetails.error}</p>`;
       return;
     }
-
     showSchemeDetails(schemeDetails);
     return;
   }
 
-  // 🔹 2. If no exact match, do normal fuzzy search
+  // Fuzzy search fallback
   resultsContainer.innerHTML = "<p>Searching for best matches...</p>";
   const searchResults = fuse.search(searchTerm).slice(0, 5);
-
   if (!searchResults.length) {
     resultsContainer.innerHTML = `<p>No close matches found for "<strong>${searchTerm}</strong>". Try another search.</p>`;
     return;
   }
-
   showSearchResults(searchResults);
 }
 
@@ -244,9 +199,7 @@ async function handleFormSubmit(e) {
 function init() {
   loadAllSchemes();
   searchInput.addEventListener("input", handleSearchInput);
-  document
-    .getElementById("searchForm")
-    .addEventListener("submit", handleFormSubmit);
+  document.getElementById("searchForm").addEventListener("submit", handleFormSubmit);
   document.addEventListener("click", (e) => {
     if (e.target !== searchInput && !suggestionsBox.contains(e.target)) {
       suggestionsBox.style.display = "none";

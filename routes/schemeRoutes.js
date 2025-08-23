@@ -26,10 +26,10 @@ router.get(
 // PUT /schemes/:id — update scheme by ID (with validation)
 router.put("/:id", validateUpdateScheme, schemeController.updateScheme);
 
-// DELETE /schemes/:id — delete scheme by ID (with optional validation)
-router.delete("/:id", validateDeleteScheme, schemeController.deleteScheme);
-
 //delete all the scheme
 router.delete("/all", schemeController.deleteAll);
+
+// DELETE /schemes/:id — delete scheme by ID (with optional validation)
+router.delete("/:id", validateDeleteScheme, schemeController.deleteScheme);
 
 module.exports = router;

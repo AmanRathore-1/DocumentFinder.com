@@ -75,15 +75,25 @@ exports.getSchemeDocumentThroughTitle = async (req, res) => {
   }
 
   try {
-    const schemes = await Scheme.find({
-      name: { $regex: name.trim(), $options: "i" },
+    // Escape special regex characters in name
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    // 1️⃣ Try exact match (ignores case)
+    const exactScheme = await Scheme.findOne({
+      name: { $regex: `^${escapedName}$`, $options: "i" },
+    });
+    if (exactScheme) return res.status(200).json(exactScheme);
+
+    // 2️⃣ Fallback to partial match
+    const partialSchemes = await Scheme.find({
+      name: { $regex: escapedName, $options: "i" },
     });
 
-    if (!schemes.length) {
+    if (!partialSchemes.length) {
       return res.status(404).json({ error: "No schemes found" });
     }
 
-    return res.status(200).json(schemes);
+    return res.status(200).json(partialSchemes);
   } catch (err) {
     return res
       .status(500)
@@ -210,12 +220,19 @@ exports.deleteScheme = async (req, res) => {
   }
 };
 
-//function in check
 exports.deleteAll = async (req, res) => {
   try {
-    await Scheme.deleteMany({});
-    res.status(200).json({ message: "All schemes deleted successfully" });
+    const result = await Scheme.deleteMany({});
+    
+    res.status(200).json({ 
+      message: "All schemes deleted successfully", 
+      deletedCount: result.deletedCount 
+    });
   } catch (error) {
-    res.status(500).json({ error: "Server error", details: error.message });
+    res.status(500).json({ 
+      error: "Server error", 
+      details: error.message 
+    });
   }
 };
+
