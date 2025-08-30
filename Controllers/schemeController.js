@@ -3,7 +3,33 @@ const cache = require("../utils/cache");
 /**
  * Add new scheme
  */
-//add expirey date to the prompt
+const Reqscheme = require("../models/Reqscheme");
+
+// Handle saving a new scheme request
+exports.requestScheme = async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({ message: "Scheme name is required" });
+    }
+
+    // Check if already exists
+    const existing = await Reqscheme.findOne({ name: name.trim() });
+    if (existing) {
+      return res.status(400).json({ message: "Scheme already requested" });
+    }
+
+    // Save to DB
+    const newReq = new Reqscheme({ name: name.trim() });
+    await newReq.save();
+
+    res.status(201).json({ message: "Scheme request saved", scheme: newReq });
+  } catch (err) {
+    res.status(500).json({ message: "Error saving scheme", error: err.message });
+  }
+};
+
 exports.addScheme = async (req, res) => {
   try {
     const { name, documents } = req.body;
@@ -144,10 +170,6 @@ exports.getAllSchemeNames = async (req, res) => {
   }
 };
 
-
-
-//not much scalable
-// only using name and documents to update and not usign other fields if they are present
 exports.updateScheme = async (req, res) => {
   try {
     const { id } = req.params;

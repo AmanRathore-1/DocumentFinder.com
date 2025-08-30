@@ -32,4 +32,7 @@ router.delete("/all", schemeController.deleteAll);
 // DELETE /schemes/:id — delete scheme by ID (with optional validation)
 router.delete("/:id", validateDeleteScheme, schemeController.deleteScheme);
 
+//Saving Requested Scheme data to the datebase
+router.post("/request-scheme", schemeController.requestScheme);
+
 module.exports = router;
