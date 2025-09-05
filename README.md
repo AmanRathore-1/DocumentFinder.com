@@ -6,7 +6,7 @@ DocumentLister is a web app that lets users quickly find the exact documents nee
 # Features
 🔍 Smart Scheme Search – Search by scheme name and instantly see required documents.
 
-📄 Document Details – Each result clearly lists the necessary documents with descriptions.
+📄 Document Details – Each result clearly lists the necessary documents.
 
 📑 Categorized Data – Documents grouped by type (ID proof, income proof, education proof, etc.).
 

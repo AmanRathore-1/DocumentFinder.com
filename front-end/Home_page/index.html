@@ -1,0 +1,76 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document Lister</title>
+    <link rel="stylesheet" href="front_page.css" />
+    <link rel="stylesheet" href="../navbar/navbar.css" />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <header>
+      <div id="navbar-placeholder"></div>
+    </header>
+    <main>
+      <div class="card">
+        <!-- Left Pane -->
+        <section class="pane left-pane">
+          <form id="searchForm" class="search-form">
+            <div class="store-header">
+              <h3>
+                Search the Document required for a scheme registration by typing
+                its name..
+              </h3>
+            </div>
+            <div class="search-container">
+              <input
+                type="text"
+                id="searchscheme"
+                name="searchscheme"
+                placeholder="Search your scheme here..."
+                required
+                autocomplete="off"
+                class="search-input"
+              />
+              <button type="submit" class="search-button">
+                <i class="fa-solid fa-magnifying-glass"></i>Search
+              </button>
+            </div>
+          </form>
+          <div id="results"></div>
+        </section>
+        <!-- Right Pane -->
+        <section class="pane right-pane">
+          <div class="store-header">
+            <h3>Didn't find the Scheme?</h3>
+            <span>Enter its name and we'll add it soon.</span>
+          </div>
+          <form id="storeForm" class="store-form">
+            <input
+              type="text"
+              id="newSchemeName"
+              name="newSchemeName"
+              placeholder="Enter scheme name"
+              required
+              class="store-input"
+            />
+            <button type="submit" class="store-button">
+              <i class="fa-solid fa-paper-plane"></i> Submit
+            </button>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <footer><p>&copy; 2025 Document Lister. All rights reserved.</p></footer>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <script src="../navbar/navbar.js"></script>
+    <script type="module" src="front_page_script.js"></script>
+  </body>
+</html>
