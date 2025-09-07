@@ -9,6 +9,16 @@
       display: flex;
       flex-direction: column;
     }
+    /* For Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: none;
+}
+
 
     /* -------------------- Navbar -------------------- */
     .navbar {
@@ -96,15 +106,6 @@
       position: relative;
     }
 
-    h1::after {
-      content: '';
-      display: block;
-      width: 80px;
-      height: 4px;
-      background: linear-gradient(90deg, #667eea, #764ba2);
-      margin: 1rem auto;
-      border-radius: 2px;
-    }
 
     h2 {
       color: #2d3748;
