@@ -3,6 +3,9 @@ const connectDB = require("./db/MongoConnect");
 const ServerListening = require("./db/ServerListening");
 const schemeRoutes = require("./routes/schemeRoutes");
 const helmet=require("helmet");
+const bodyParser = require("body-parser");
+const contactRoutes = require("./Controllers/Mailcontroller");
+
 require("dotenv").config();
 const cors = require("cors");
 
@@ -16,6 +19,8 @@ app.use(express.json({ limit: "50mb" }));
 
 // Routes
 app.use("/schemes", schemeRoutes);
+app.use("/api", contactRoutes); 
+
 
 // Start server after DB connects
 async function startServer() {

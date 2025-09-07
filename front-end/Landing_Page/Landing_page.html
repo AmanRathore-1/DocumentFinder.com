@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Never miss a document again! Get instant, accurate lists of required documents for any government scheme registration.">
+  <title>Document Lister - Never Miss a Document Again</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #1e40af;
+      --success: #10b981;
+      --text: #334155;
+      --text-light: #64748b;
+      --bg: #f8fafc;
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow: 0 10px 20px rgba(0,0,0,0.08);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+        background: linear-gradient(90deg, #6dd5fa, #2980b9);
+      line-height: 1.6;
+      overflow-x: hidden;
+      opacity:0; transition: opacity 0.8s ease;
+    }
+
+    a { text-decoration:none; color: inherit; }
+
+    /* Header */
+    header {
+      position: fixed;
+      top:0; left:0; right:0;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      border-bottom:1px solid rgba(226,232,240,0.8);
+      z-index:1000;
+      transition: all 0.3s ease;
+    }
+    header.scrolled { box-shadow: var(--shadow); }
+
+    .header-container {
+      max-width: 1200px; margin:0 auto;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1rem 2rem;
+    }
+
+    .logo {
+      display:flex; align-items:center; gap:0.5rem;
+      font-size:1.5rem; font-weight:800; color:var(--primary);
+    }
+
+    .btn-primary {
+      background: var(--gradient);
+      color:#fff;
+      padding:0.75rem 2rem;
+      border-radius:50px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:0.5rem;
+      box-shadow:0 4px 15px rgba(59,130,246,0.3);
+      transition: all 0.3s ease;
+      border:none; cursor:pointer;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow:0 8px 25px rgba(59,130,246,0.4);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: var(--gradient);
+      color:#fff;
+      min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      text-align:center; padding:6rem 2rem 4rem;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,122.7C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') bottom center/cover no-repeat;
+    }
+
+    .hero-content { position:relative; z-index:2; max-width:800px; }
+
+    .hero h1 { font-size:clamp(2.5rem,8vw,5rem); font-weight:900; margin-bottom:1rem; text-shadow:0 4px 20px rgba(0,0,0,0.3);}
+    .hero .subtitle { font-size:clamp(1.5rem,4vw,2rem); margin-bottom:1rem; font-weight:300; opacity:0.95;}
+    .hero .description { font-size:clamp(1.1rem,2vw,1.3rem); opacity:0.9; margin-bottom:2.5rem; line-height:1.7;}
+
+    .hero-cta { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; }
+    .floating { animation: floating 3s ease-in-out infinite; }
+    @keyframes floating { 0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);} }
+
+    .trust-indicators {
+      display:flex; justify-content:center; gap:3rem; flex-wrap:wrap;
+      margin-top:2rem; opacity:0.9;
+    }
+    .trust-item { display:flex; align-items:center; gap:0.5rem; font-weight:500; font-size:1rem; }
+    .trust-item i { color: var(--success); font-size:1.5rem; }
+
+    /* Footer */
+    footer { background:#0f172a; color:white; padding:2rem 0; text-align:center; }
+    footer p { color:#94a3b8; margin:0; }
+
+    /* Responsive */
+    @media (max-width:768px){
+      .hero h1{ font-size:2.5rem; }
+      .hero .subtitle{ font-size:1.5rem; }
+      .trust-indicators{ flex-direction:column; gap:1rem; }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp{ from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+    .hero h1, .hero .subtitle, .hero .description, .hero-cta, .trust-indicators { animation: fadeInUp 0.8s ease-out both; }
+    .hero .subtitle{animation-delay:0.2s;} .hero .description{animation-delay:0.4s;}
+    .hero-cta{animation-delay:0.6s;} .trust-indicators{animation-delay:0.8s;}
+  </style> -->
+  <link rel="stylesheet" href="Landing_page.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <header id="header">
+    <div class="header-container">
+      <a href="#" class="logo"><i class="fas fa-clipboard-list"></i> Document Lister</a>
+      <button class="btn-primary" onclick="handleGetStarted()"><i class="fas fa-rocket"></i> Get Started</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Never Miss a Document Again!</h1>
+      <p class="subtitle">Get Instant, Accurate Document Lists for Any Government Scheme</p>
+      <p class="description">
+        Stop wasting time on rejected applications. Our database shows exactly which documents you need for any government scheme registration — updated daily.
+      </p>
+      <div class="hero-cta">
+        <button class="btn-primary floating" onclick="handleGetStarted()"><i class="fas fa-search"></i> Find Required Documents</button>
+      </div>
+      <div class="trust-indicators">
+        <div class="trust-item"><i class="fas fa-check-circle"></i> 500+ Schemes</div>
+        <div class="trust-item"><i class="fas fa-users"></i> 500+ Users</div>
+        <div class="trust-item"><i class="fas fa-clock"></i> Updated Daily</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Document Lister. All rights reserved.</p>
+  </footer>
+
+  <script src="Landing_page.script"></script>
+</body>
+</html>

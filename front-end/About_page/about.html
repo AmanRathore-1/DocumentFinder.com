@@ -1,44 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About Document Lister</title>
-    <link rel="stylesheet" href="../About_page/about.css">
-       <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link rel="stylesheet" href="../navbar/navbar.css">
-  </head>
-  <body>
-    <header>
-<div id="navbar-placeholder"></div>
-    </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Document Lister - A tool to help track required documents for government scheme registration">
+  <title>About - Document Lister</title>
 
-    <div class="container">
-       <h2 style="text-decoration: underline;">Search required documents for any scheme for scheme registration</h2>
-      <h2>About Document Lister</h2>
-      <p>
-        Document Lister is a simple and effective tool designed to help users
-        keep track of the documents needed for registering any government or
-        organizational scheme. It ensures you never miss a required document and
-        makes the registration process faster and hassle-free.
-      </p>
+  <!-- Font Awesome -->
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  >
+  <link rel="stylesheet" href="../About_page/about.css">
 
-      <h2>How Document Lister Helps</h2>
-      <ul>
-        <li>Displays all required documents in a clear list format.</li>
-        <li>Makes checking and gathering documents easier.</li>
-        <li>Helps avoid missing documents during registration.</li>
-        <li>Simple, clean interface for all users.</li>
-      </ul>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-header">
+      <h1>DocumentLister.com</h1>
     </div>
+    <ul>
+      <li><a href="../Home_page/index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="../About_page/about.html"><i class="fa-solid fa-circle-info"></i> About</a></li>
+      <li><a href="../Contact_page/contact_page.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+    </ul>
+  </nav>
 
-    <footer>&copy; 2025 Document Lister. All rights reserved.</footer>
+  <!-- Main Content -->
+  <main class="container">
+    <h1><i class="fas fa-file-alt"></i> Document Lister</h1>
+    
+    <section>
+      <h2><i class="fas fa-info-circle"></i> About Document Lister</h2>
+      <p>
+        Document Lister is a comprehensive and user-friendly tool designed to streamline 
+        the process of tracking and organizing required documents for government scheme 
+        registrations. Our platform ensures you never miss a crucial document and makes 
+        the entire registration process more efficient and stress-free.
+      </p>
+    </section>
 
-    <script src="../navbar/navbar.js"></script>
-  </body>
+    <section>
+      <h2><i class="fas fa-rocket"></i> How Document Lister Helps</h2>
+      <ul class="benefits-list">
+        <li>Displays all required documents in a clear, organized list format</li>
+        <li>Provides intuitive checking system to track your progress</li>
+        <li>Prevents missing documents that could delay your registration</li>
+        <li>Features a clean, accessible interface suitable for all users</li>
+        <li>Offers scheme-specific document requirements and guidelines</li>
+        <li>Saves time with quick document verification and checklist features</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Document Lister. All rights reserved. Built with <i class="fas fa-heart"></i> to simplify your documentation process.</p>
+  </footer>
+  <script>
+  let lastScrollY = window.scrollY;
+  const navbar = document.querySelector(".navbar");
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > lastScrollY) {
+      // Scrolling down → hide navbar
+      navbar.classList.add("hidden");
+      navbar.classList.remove("show");
+    } else {
+      // Scrolling up → show navbar
+      navbar.classList.remove("hidden");
+      navbar.classList.add("show");
+    }
+    lastScrollY = window.scrollY;
+  });
+</script>
+
+</body>
 </html>

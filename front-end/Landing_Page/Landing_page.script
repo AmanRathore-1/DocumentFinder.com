@@ -1,0 +1,39 @@
+ window.addEventListener('load', ()=>{ document.body.style.opacity='1'; });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      header.classList.toggle('scrolled', window.scrollY>100);
+    });
+
+    // Buttons hover feedback
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+      btn.addEventListener('mouseenter', ()=>btn.style.transform='translateY(-3px) scale(1.05)');
+      btn.addEventListener('mouseleave', ()=>btn.style.transform='translateY(0) scale(1)');
+    });
+
+    function handleGetStarted(){
+      window.location.href="../Home_page/index.html";
+    }
+
+    function scrollToAction(){
+      document.querySelector('.hero').scrollIntoView({behavior:'smooth'});
+    }
+
+let lastScrollY = window.scrollY;
+const header = document.getElementById('header');
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > lastScrollY) {
+    // scrolling down → hide navbar
+    header.classList.add('hidden');
+  } else {
+    // scrolling up → show navbar
+    header.classList.remove('hidden');
+  }
+
+  // toggle transparency when scrolled past 100px
+  header.classList.toggle('scrolled', window.scrollY > 100);
+
+  lastScrollY = window.scrollY;
+});
