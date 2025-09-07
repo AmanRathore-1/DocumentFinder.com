@@ -1,6 +1,2 @@
 "node_modules/" 
 ".env" 
--e "node_modules/\n.env" 
-
-"node_modules/" 
-".env" 
